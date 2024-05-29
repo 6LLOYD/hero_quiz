@@ -111,7 +111,7 @@ const SignUp = (props) => {
                   type="text"
                   id="email"
                   required
-                  autoComplete="off"
+                  autoComplete="new-password"
                   onChange={handleChange}
                   value={email}
                 />
