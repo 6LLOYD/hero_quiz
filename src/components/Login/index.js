@@ -77,6 +77,10 @@ const Login = () => {
               <Link to="/signup" className="simpleLink">
                 Nouveau sur Super Hero quiz? Inscrivez-vous maintenant.
               </Link>
+              <br />
+              <Link to="/forgetpassword" className="simpleLink">
+                Mot de passe oublié?
+              </Link>
             </div>
           </div>
         </div>
