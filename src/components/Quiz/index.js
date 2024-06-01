@@ -35,7 +35,7 @@ class Quiz extends Component {
     }
   }
   render() {
-    const { pseudo } = this.props.userData;
+    // const { pseudo } = this.props.userData;
     return (
       <div>
         <Levels />
