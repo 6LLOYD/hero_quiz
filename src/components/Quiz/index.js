@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Levels from "../Levels";
 import ProgressBar from "../ProgressBar";
 import { QuizMarvel } from "../quizMarvel";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class Quiz extends Component {
   constructor(props) {
@@ -26,7 +28,6 @@ class Quiz extends Component {
 
     if (fetchedArrayQuiz.length >= this.state.maxQuestions) {
       this.storedDataRef.current = fetchedArrayQuiz;
-      console.log(this.storedDataRef.current);
       const newArray = fetchedArrayQuiz.map((questionObj) => questionObj); // Corrigé : Map sur les objets de question
 
       this.setState({ storedQuestions: newArray });
@@ -35,8 +36,22 @@ class Quiz extends Component {
     }
   };
 
+  showWelcomeMsg = (pseudo) => {
+    toast(`Hey '${pseudo}', nice to see you!`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  };
+
   componentDidMount() {
     this.loadQuestions(this.state.levelsNames[this.state.quizLevel]);
+    if (this.props.userData && this.props.userData.pseudo) {
+      this.showWelcomeMsg(this.props.userData.pseudo);
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -77,8 +92,26 @@ class Quiz extends Component {
       this.setState((prevState) => ({
         score: prevState.score + 1,
       }));
+      toast.success("Well done, +1!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } else {
+      toast.error("Wrong answer, -1!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
+
   render() {
     // const { pseudo } = this.props.userData;
     const displayOptions = this.state.options.map((option, index) => {
@@ -108,6 +141,8 @@ class Quiz extends Component {
         >
           Suivant
         </button>
+
+        <ToastContainer />
       </div>
     );
   }
