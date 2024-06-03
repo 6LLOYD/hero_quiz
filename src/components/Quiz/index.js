@@ -16,13 +16,17 @@ class Quiz extends Component {
       idQuestion: 0,
       btnDisabled: true,
       userAnswer: null,
+      score: 0,
     };
+    this.storedDataRef = React.createRef();
   }
 
   loadQuestions = (quizz) => {
     const fetchedArrayQuiz = QuizMarvel[0].quizz[quizz];
 
     if (fetchedArrayQuiz.length >= this.state.maxQuestions) {
+      this.storedDataRef.current = fetchedArrayQuiz;
+      console.log(this.storedDataRef.current);
       const newArray = fetchedArrayQuiz.map((questionObj) => questionObj); // Corrigé : Map sur les objets de question
 
       this.setState({ storedQuestions: newArray });
@@ -43,13 +47,38 @@ class Quiz extends Component {
           this.state.storedQuestions[this.state.idQuestion]?.options || [], // Ajouter une valeur par défaut vide
       });
     }
+
+    if (this.state.idQuestion !== prevState.idQuestion) {
+      this.setState({
+        question: this.state.storedQuestions[this.state.idQuestion]?.question,
+        options:
+          this.state.storedQuestions[this.state.idQuestion]?.options || [], // Ajouter une valeur par défaut vide
+        userAnswer: null,
+        btnDisabled: true,
+      });
+    }
   }
 
   submitAnswer = (selectedAnswer) => {
     this.setState({ userAnswer: selectedAnswer, btnDisabled: false });
   };
 
-  handleSubmit() {}
+  nextQuestion = () => {
+    if (this.state.idQuestion === this.state.maxQuestions - 1) {
+      //end
+    } else {
+      this.setState((prevState) => ({
+        idQuestion: prevState.idQuestion + 1,
+      }));
+    }
+    const goodAnswer = this.storedDataRef.current[this.state.idQuestion].answer;
+
+    if (this.state.userAnswer === goodAnswer) {
+      this.setState((prevState) => ({
+        score: prevState.score + 1,
+      }));
+    }
+  };
   render() {
     // const { pseudo } = this.props.userData;
     const displayOptions = this.state.options.map((option, index) => {
@@ -75,7 +104,7 @@ class Quiz extends Component {
         <button
           className="btnSubmit"
           disabled={this.state.btnDisabled}
-          onClick={this.handleSubmit}
+          onClick={this.nextQuestion}
         >
           Suivant
         </button>
