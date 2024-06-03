@@ -471,6 +471,8 @@ input:checked + .slider:before {
   background-color: var(--light-grey-color);
   padding: 20px;
   margin-bottom: 40px;
+  width: 300px;
+  margin: 50px auto;
 }
 
 .headingLevels {
