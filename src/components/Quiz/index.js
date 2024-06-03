@@ -21,6 +21,7 @@ class Quiz extends Component {
       userAnswer: null,
       score: 0,
       quizEnd: false,
+      userStatus: false,
     };
     this.storedDataRef = React.createRef();
   }
@@ -39,14 +40,17 @@ class Quiz extends Component {
   };
 
   showWelcomeMsg = (pseudo) => {
-    toast(`Hey '${pseudo}', nice to see you!`, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
+    if (!this.state.userStatus) {
+      this.setState({ userStatus: true });
+      toast(`Hey '${pseudo}', nice to see you!`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    }
   };
 
   componentDidMount() {
@@ -134,8 +138,8 @@ class Quiz extends Component {
       );
     });
 
-    return this.state.quizEnd ? (
-      <QuizOver />
+    return !this.state.quizEnd ? (
+      <QuizOver ref={this.storedDataRef} />
     ) : (
       <Fragment>
         <Levels />
@@ -151,7 +155,7 @@ class Quiz extends Component {
           disabled={this.state.btnDisabled}
           onClick={this.nextQuestion}
         >
-          {this.state.idQuestion < this.state.maxQuestions - 1
+          {this.state.idQuestion < this.state.maxQuestions
             ? "Suivant"
             : "Terminer"}
         </button>
