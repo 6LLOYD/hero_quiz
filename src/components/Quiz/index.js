@@ -22,6 +22,7 @@ class Quiz extends Component {
       score: 0,
       quizEnd: false,
       userStatus: false,
+      percent: 0,
     };
     this.storedDataRef = React.createRef();
   }
@@ -118,8 +119,25 @@ class Quiz extends Component {
     }
   };
 
+  getPercentage = (maxQuest, ourScore) => (ourScore / maxQuest) * 100;
+
   gameOver = () => {
-    this.setState({ quizEnd: true });
+    const gradePercent = this.getPercentage(
+      this.state.maxQuestions,
+      this.state.score
+    );
+    if (gradePercent >= 50) {
+      this.setState({
+        quizLevel: this.state.quizLevel + 1,
+        percent: gradePercent,
+        quizEnd: true,
+      });
+    } else {
+      this.setState({
+        percent: gradePercent,
+        quizEnd: true,
+      });
+    }
   };
 
   render() {
@@ -138,8 +156,15 @@ class Quiz extends Component {
       );
     });
 
-    return !this.state.quizEnd ? (
-      <QuizOver ref={this.storedDataRef} />
+    return this.state.quizEnd ? (
+      <QuizOver
+        ref={this.storedDataRef}
+        levelNames={this.state.levelsNames}
+        score={this.state.score}
+        maxQuestions={this.state.maxQuestions}
+        quizLevel={this.state.quizLevel}
+        percent={this.state.percent}
+      />
     ) : (
       <Fragment>
         <Levels />
