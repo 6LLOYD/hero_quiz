@@ -5,6 +5,7 @@ import { QuizMarvel } from "../quizMarvel";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import QuizOver from "../QuizOver";
+import { FaChevronRight } from "react-icons/fa";
 
 class Quiz extends Component {
   constructor(props) {
@@ -164,7 +165,7 @@ class Quiz extends Component {
           onClick={() => this.submitAnswer(option)}
           key={index}
         >
-          {option}
+          <FaChevronRight /> {option}
         </p>
       );
     });
