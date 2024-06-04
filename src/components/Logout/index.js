@@ -35,7 +35,13 @@ const Logout = () => {
         src={logout}
         alt="Logout"
         onClick={handleLogout}
-        style={{ cursor: "pointer" }}
+        style={{
+          cursor: "pointer",
+          width: "30px", // Taille fixe de l'image
+          height: "auto",
+          maxWidth: "100%", // Empêche l'image de dépasser la taille de son conteneur
+          maxHeight: "100px", // Limite la hauteur maximale
+        }}
       />
     </div>
   );
