@@ -1,11 +1,15 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { GiTrophyCup } from "react-icons/gi";
 import Modal from "../Modal";
+import axios from "axios";
+
 const QuizOver = React.forwardRef((props, ref) => {
   const { levelNames, score, maxQuestions, quizLevel, loadLevelQuestions } =
     props;
   const [asked, setAsked] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [charactersInfos, setCharactersInfos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const API_PUBLIC_KEY = process.env.REACT_APP_HERO_API_KEY;
 
@@ -17,10 +21,22 @@ const QuizOver = React.forwardRef((props, ref) => {
 
   const showModal = (id) => {
     setOpenModal(true);
+    axios
+      .get(
+        `https://gateway.marvel.com:443/v1/public/characters/${id}?ts=1&apikey=${API_PUBLIC_KEY}&hash=${hash}`
+      )
+      .then((response) => {
+        setCharactersInfos(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const hideModal = () => {
     setOpenModal(false);
+    setLoading(true);
   };
 
   const averageGrade = maxQuestions / 2;
@@ -104,6 +120,29 @@ const QuizOver = React.forwardRef((props, ref) => {
       </tr>
     );
 
+  const resultInModal = !loading ? (
+    <Fragment>
+      <div className="modalHeader">
+        <h2>{charactersInfos.data.results[0].name}</h2>
+      </div>
+      <div className="modalBody">
+        <h3>Titre</h3>
+      </div>
+      <div className="modalFooter">
+        <button className="modalBtn">Fermer</button>
+      </div>
+    </Fragment>
+  ) : (
+    <Fragment>
+      <div className="modalHeader">
+        <h2>Réponse de Marvel ...</h2>
+      </div>
+      <div className="modalBody">
+        <div className="loader"></div>
+      </div>
+    </Fragment>
+  );
+
   return (
     <Fragment>
       {decision}
@@ -122,15 +161,7 @@ const QuizOver = React.forwardRef((props, ref) => {
         </table>
       </div>
       <Modal showModal={openModal} hideModal={hideModal}>
-        <div className="modalHeader">
-          <h2>Titre</h2>
-        </div>
-        <div className="modalBody">
-          <h3>Titre</h3>
-        </div>
-        <div className="modalFooter">
-          <button className="modalBtn">Fermer</button>
-        </div>
+        {resultInModal}
       </Modal>
     </Fragment>
   );
