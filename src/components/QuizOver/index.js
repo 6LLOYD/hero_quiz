@@ -7,6 +7,10 @@ const QuizOver = React.forwardRef((props, ref) => {
   const [asked, setAsked] = useState([]);
   const [openModal, setOpenModal] = useState(false);
 
+  const API_PUBLIC_KEY = process.env.REACT_APP_HERO_API_KEY;
+
+  const hash = "5b8bab94134affd718005fdc21d90179";
+
   useEffect(() => {
     setAsked(ref.current);
   }, [ref]);
